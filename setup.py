@@ -3,14 +3,14 @@ from setuptools import setup
 setup(
     name='mcts',
     py_modules=['mcts'],
-    version='1.0.3',
+    version='1.0.4',
     description='A simple package to allow users to run Monte Carlo Tree Search on any perfect information domain',
     long_description=open("README.md", "r").read(),
     long_description_content_type='text/markdown',
-    author='Paul Sinclair',
-    author_email='pbsinclair42@gmail.com',
+    author='Paul Sinclair, Markus Rothgänger',
+    author_email='pbsinclair42@gmail.com, mrothgaenger@techfak.de',
     license='MIT',
-    url='https://github.com/pbsinclair42/MCTS',
+    url='https://github.com/pbsinclair42/MCTS, https://github.com/mmrrqq/MCTS',
     keywords=['mcts', 'monte', 'carlo', 'tree', 'search'],
     classifiers=[
         "Development Status :: 4 - Beta",

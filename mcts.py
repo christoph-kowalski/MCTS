@@ -53,7 +53,7 @@ class mcts():
         self.explorationConstant = explorationConstant
         self.rollout = rolloutPolicy
 
-    def search(self, initialState, needDetails=False):
+    def search(self, initialState, needDetails=False, n=1):
         self.root = treeNode(initialState, None)
 
         if self.limitType == 'time':
@@ -64,13 +64,21 @@ class mcts():
             for i in range(self.searchLimit):
                 self.executeRound()
 
-        bestChild = self.getBestChild(self.root, 0)
-        action=(action for action, node in self.root.children.items() if node is bestChild).__next__()
+        if n == 1:
+            bestChild = self.getBestChild(self.root, 0)
+            action = (action for action, node in self.root.children.items() if node is bestChild).__next__()
+            if needDetails:
+                return {"action": action, "expectedReward": bestChild.totalReward / bestChild.numVisits}
+            else:
+                return action
+        
+        bestChilds = self.getBestChilds(self.root, 0, n)
+        actions = [action for action, node in self.root.children.items() if node in bestChilds]
         if needDetails:
-            return {"action": action, "expectedReward": bestChild.totalReward / bestChild.numVisits}
+            return {"action": actions, "expectedReward": [ child.totalReward/child.numVisits for child in bestChilds ] }
         else:
-            return action
-
+            return actions
+    
     def executeRound(self):
         """
             execute a selection-expansion-simulation-backpropagation round
@@ -117,3 +125,16 @@ class mcts():
             elif nodeValue == bestValue:
                 bestNodes.append(child)
         return random.choice(bestNodes)
+    
+    def getBestChilds(self, node, explorationValue, n=2):        
+        nodes = []
+        values = []
+        for child in node.children.values():
+            nodeValue = node.state.getCurrentPlayer() * child.totalReward / child.numVisits + explorationValue * math.sqrt(
+                2 * math.log(node.numVisits) / child.numVisits)
+            
+            values.append(nodeValue)
+            nodes.append(child)
+
+        sort_idx = sorted(range(len(values)), key=values.__getitem__, reverse=True)[:n]
+        return [nodes[i] for i in sort_idx]

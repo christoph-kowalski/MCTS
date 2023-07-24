@@ -1,6 +1,7 @@
 # MCTS
 
 This package provides a simple way of using Monte Carlo Tree Search in any perfect information domain.
+Patched by mmrrqq to return the best n nodes when searching.
 
 ## Installation
 
