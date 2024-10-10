@@ -73,7 +73,9 @@ class mcts():
                 return action
         
         bestChilds = self.getBestChilds(self.root, 0, n)
-        actions = [action for action, node in self.root.children.items() if node in bestChilds]
+        actions = []
+        for child_node in bestChilds:
+            actions.append([action for action, node in self.root.children.items() if node == child_node][0])
         if needDetails:
             return {"action": actions, "expectedReward": [ child.totalReward/child.numVisits for child in bestChilds ] }
         else:
